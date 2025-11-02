@@ -16,7 +16,7 @@ app.get("/health", async (req, res) => {
     await prisma.$disconnect();
     res.json({ ok: true });
   } catch (e) {
-    res.status(500).json({ ok: false, error: "DB connection failed" });
+    res.status(500).json({ ok: false, error: e });
   }
 });
 
