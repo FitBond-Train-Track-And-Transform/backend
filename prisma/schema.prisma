@@ -7,13 +7,32 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+  PREFER_NOT_TO_SAY
+}
+
 model Trainer {
-  id             Int      @id @default(autoincrement())
-  name           String
-  age            Int
-  gender         String
-  specialization String
-  email          String   @unique
-  password       String
-  createdAt      DateTime @default(now())
+  id                    Int                    @id @default(autoincrement())
+  name                  String
+  age                   Int
+  gender                Gender
+  specialization        String
+  email                 String                 @unique
+  password              String
+  clients               String[]               // Temporary array, will be one-to-many later
+  createdAt             DateTime               @default(now())
+  passwordResetTokens   PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  trainerId   Int
+  trainer     Trainer   @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+  used        Boolean   @default(false)
 }
